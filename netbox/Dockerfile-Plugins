@@ -1,0 +1,12 @@
+# Custom NetBox image met Diode plugin voor Discovery mode
+# Zie https://github.com/netbox-community/netbox-docker/wiki/Using-Netbox-Plugins
+FROM docker.io/netboxcommunity/netbox:v4.5-4.0.0
+
+COPY plugin_requirements.txt /opt/netbox/
+RUN /usr/local/bin/uv pip install -r /opt/netbox/plugin_requirements.txt
+
+COPY configuration/configuration.py /etc/netbox/config/configuration.py
+COPY configuration/plugins.py /etc/netbox/config/plugins.py
+RUN DEBUG="true" SECRET_KEY="dummydummydummydummydummydummydummydummydummydummy" \
+    NETBOX_TO_DIODE_CLIENT_SECRET="dummy" DIODE_TARGET_OVERRIDE="grpc://127.0.0.1:8080/diode" \
+    /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input

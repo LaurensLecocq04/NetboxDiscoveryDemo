@@ -1,0 +1,27 @@
+# -*- mode: ruby -*-
+# NetBox Community + Discovery mode testomgeving
+# Gebruik: vagrant up, daarna in de VM: cd /vagrant/netbox && docker compose up -d
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/jammy64"
+  config.vm.hostname = "netbox-discovery"
+
+  # NetBox web UI op host poort 8000; Diode op 8080 (voor Orb Agent op host)
+  config.vm.network "forwarded_port", guest: 8000, host: 8000
+  config.vm.network "forwarded_port", guest: 8080, host: 8080
+
+  # Host-only netwerk zodat je vanuit je laptop rechtstreeks naar de VM kan
+  # Pas IP aan als 192.168.56.10 al in gebruik is op je systeem.
+  config.vm.network "private_network", ip: "192.168.56.10"
+
+  # Sync projectmap zodat netbox/ beschikbaar is in de VM
+  config.vm.synced_folder ".", "/vagrant"
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "16000"
+    vb.cpus = 6
+  end
+
+  # Docker + Docker Compose installeren
+  config.vm.provision "shell", path: "scripts/provision.sh"
+end

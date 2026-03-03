@@ -1,0 +1,15 @@
+# Override: custom image met Diode plugin + poort 8000
+# NetBox UI: http://localhost:8000
+services:
+  netbox:
+    image: netbox:latest-plugins
+    pull_policy: never
+    build:
+      context: .
+      dockerfile: Dockerfile-Plugins
+    ports:
+      - "8000:8080"
+
+  netbox-worker:
+    image: netbox:latest-plugins
+    pull_policy: never

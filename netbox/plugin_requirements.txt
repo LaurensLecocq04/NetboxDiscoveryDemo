@@ -1,0 +1,8 @@
+# NetBox plugins
+# Diode plugin voor Discovery mode
+#   PyPI: https://pypi.org/project/netboxlabs-diode-netbox-plugin/
+netboxlabs-diode-netbox-plugin
+
+# Validity plugin voor config/compliance checks
+#   PyPI: https://pypi.org/project/netbox-validity/
+netbox-validity

@@ -1,0 +1,28 @@
+# Template voor Orb Agent. Gebruik start-agent.sh om agent.yaml te genereren en te starten.
+# Voor device_discovery: export DEVICE_USERNAME en DEVICE_PASSWORD, of vul ze in agent.yaml in.
+
+orb:
+  config_manager:
+    active: local
+  backends:
+    common:
+      diode:
+        target: grpc://127.0.0.1:8080/diode
+        client_id: ${DIODE_CLIENT_ID}
+        client_secret: ${DIODE_CLIENT_SECRET}
+        agent_name: discovery_agent_01
+    network_discovery:
+      log_level: DEBUG       # meer detail over scans in de agent-log
+      log_format: TEXT       # leesbare tekst i.p.v. JSON
+    # device_discovery: {}   # Uitgeschakeld; eerst network discovery debuggen
+  policies:
+    network_discovery:
+      lokaal_netwerk_1:
+        config:
+          schedule: "*/15 * * * *"   # elke 15 min
+          timeout: 20                # min; genoeg voor /28
+        scope:
+          targets:
+            - "192.168.50.0/24"
+          # Veilige, werkende scan: alleen host discovery (ping), geen extra tuning
+          ping_scan: true           # -sn: alleen host discovery, geen portscan
